@@ -1,0 +1,9 @@
+# Routes CRUD
+GET           /api/routes            controllers.RoutesCtrl.findAll
+POST          /api/routes            controllers.RoutesCtrl.save
+GET           /api/routes/:id        controllers.RoutesCtrl.find(id: Long)
+PUT           /api/routes/:id        controllers.RoutesCtrl.update(id: Long)
+DELETE        /api/routes/:id        controllers.RoutesCtrl.remove(id: Long)
+
+# Route to services
+->            /                      api.CustomRouter

@@ -1,4 +1,3 @@
 # busy-example
 
-**Work in progress**
-
+This is an example of how to implement [busy](https://github.com/viajobien/busy) with minimal options.
