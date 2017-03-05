@@ -9,7 +9,7 @@ $ sbt run
 ```
 
 Then you can make requests to the application.  
-Here there are some examples:
+Here are some examples:
 
 | curl | httpie | Notes |
 |:-:|:-:|---|
