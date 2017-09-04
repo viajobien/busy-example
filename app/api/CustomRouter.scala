@@ -1,12 +1,10 @@
 package api
 
-import javax.inject.{Inject, Named}
+import javax.inject.Inject
 
-import akka.actor.ActorRef
-import com.viajobien.busy.actors.ProducerActor
 import play.api.Logger
 import play.api.libs.json.{JsNull, Json}
-import play.api.mvc.Action
+import play.api.mvc.DefaultActionBuilder
 import play.api.mvc.Results._
 import play.api.routing.Router.Routes
 import play.api.routing.SimpleRouter
@@ -18,13 +16,13 @@ import scala.concurrent.{ExecutionContext, Future}
 /**
   * @author david on 24/11/16.
   */
-class CustomRouter @Inject()(@Named(ProducerActor.name) producerActor: ActorRef,
-                             routeService: RouteService, routeRepository: RouteRepository
+class CustomRouter @Inject()(routeService: RouteService, routeRepository: RouteRepository,
+                             action: DefaultActionBuilder
                             )(implicit ec: ExecutionContext) extends SimpleRouter {
 
   override def routes: Routes = {
     case _ =>
-      Action.async { implicit request =>
+      action.async { implicit request =>
         val future = this.routeService.route(
           futureJson => futureJson map {
             case JsNull => ServiceUnavailable(Json.obj("error" -> "Error on access service"))

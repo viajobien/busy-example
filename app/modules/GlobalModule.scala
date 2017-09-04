@@ -2,7 +2,7 @@ package modules
 
 import com.google.inject.AbstractModule
 import com.google.inject.name.Names
-import com.viajobien.busy.actors.ProducerActor
+import com.viajobien.busy.services.Producer
 import global.{OnStartHook, OnStopHook}
 
 import scala.concurrent.ExecutionContext
@@ -15,7 +15,7 @@ class GlobalModule extends AbstractModule {
   override def configure() {
     /* *** BUSY bindings, not recommended to use ExecutionContext.global on production *** */
     bind(classOf[ExecutionContext])
-      .annotatedWith(Names.named(ProducerActor.contextName))
+      .annotatedWith(Names.named(Producer.contextName))
       .toInstance(scala.concurrent.ExecutionContext.global)
     /* ********************* */
 

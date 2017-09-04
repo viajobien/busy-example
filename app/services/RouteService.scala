@@ -1,11 +1,8 @@
 package services
 
-import javax.inject.{Inject, Named, Singleton}
+import javax.inject.{Inject, Singleton}
 
-import akka.actor.ActorRef
-import akka.pattern._
-import akka.util.Timeout
-import com.viajobien.busy.actors.{Produce, ProducerActor}
+import com.viajobien.busy.services.Producer
 import com.viajobien.busy.models.routing.{BasicRouter, EndpointRouter}
 import play.api.libs.json.JsValue
 import play.api.mvc.{AnyContent, Request}
@@ -20,7 +17,7 @@ import scala.concurrent.duration._
   *
   */
 @Singleton
-class RouteService @Inject() (@Named(ProducerActor.name) producerActor: ActorRef, routeRepository: RouteRepository)
+class RouteService @Inject() (producer: Producer, routeRepository: RouteRepository)
                              (implicit ec: ExecutionContext) {
 
   private val router: EndpointRouter = BasicRouter.getRouter(routeRepository)
@@ -34,8 +31,7 @@ class RouteService @Inject() (@Named(ProducerActor.name) producerActor: ActorRef
     this.router.route match {
       case Some(endpoint) =>
         val duration = 20 seconds // Just for test you probably need other timeouts
-        implicit val timeout = duration: Timeout
-        val value = (this.producerActor ? Produce(request, endpoint, duration)).mapTo[JsValue]
+        val value = this.producer.produce(request, endpoint, duration)
         successFunc(value)
 
       case _ =>
